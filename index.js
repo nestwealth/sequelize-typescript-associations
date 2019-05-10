@@ -44,7 +44,7 @@ const initArgParser = (ArgParserClass) => {
 
 // FIXME: this doesn't seem to work
 // const assertArgLengthsAreTheSame = (args) => {
-//   ["associationModelName", "plural", "type", "joinTable"].map(k => console.log(args[k].length));
+//   ['associationModelName', 'plural', 'type', 'joinTable'].map(k => console.log(args[k].length));
 //   console.log(args.associationModelName.length === args.plural.length === args.type.length === args.joinTable.length);
 //   return args.associationModelName.length === args.plural.length === args.type.length === args.joinTable.length;
 // };
@@ -54,9 +54,9 @@ const addMixinsBelongsTo = (associationModelName, singular) => {
   const AssocAttributes = `${associationModelName}Attributes`;
   return (
     `
-    get${singular}: Sequelize.BelongsToGetAssociationMixin<${AssocInstance}>;
-    set${singular}: Sequelize.BelongsToSetAssociationMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    create${singular}: Sequelize.BelongsToCreateAssociationMixin<${AssocAttributes}>;
+    get${singular}: sequelize.BelongsToGetAssociationMixin<I${AssocInstance}>;
+    set${singular}: sequelize.BelongsToSetAssociationMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    create${singular}: sequelize.BelongsToCreateAssociationMixin<I${AssocAttributes}>;
     `
   );
 };
@@ -66,9 +66,9 @@ const addMixinsHasOne = (associationModelName, singular) => {
   const AssocAttributes = `${associationModelName}Attributes`;
   return (
     `
-    get${singular}: Sequelize.HasOneGetAssociationMixin<${AssocInstance}>;
-    set${singular}: Sequelize.HasOneSetAssociationMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    create${singular}: Sequelize.HasOneCreateAssociationMixin<${AssocAttributes}>;
+    get${singular}: sequelize.HasOneGetAssociationMixin<I${AssocInstance}>;
+    set${singular}: sequelize.HasOneSetAssociationMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    create${singular}: sequelize.HasOneCreateAssociationMixin<I${AssocAttributes}>;
     `
   );
 };
@@ -78,16 +78,16 @@ const addMixinsHasMany = (associationModelName, singular, plural) => {
   const AssocAttributes = `${associationModelName}Attributes`;
   return (
     `
-    get${plural}: Sequelize.HasManyGetAssociationsMixin<${AssocInstance}>;
-    set${plural}: Sequelize.HasManySetAssociationsMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    add${plural}: Sequelize.HasManyAddAssociationsMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    add${singular}: Sequelize.HasManyAddAssociationMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    create${singular}: Sequelize.HasManyCreateAssociationMixin<${AssocAttributes}, ${AssocInstance}>;
-    remove${singular}: Sequelize.HasManyRemoveAssociationMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    remove${plural}: Sequelize.HasManyRemoveAssociationsMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    has${singular}: Sequelize.HasManyHasAssociationMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    has${plural}: Sequelize.HasManyHasAssociationsMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    count${plural}: Sequelize.HasManyCountAssociationsMixin;
+    get${plural}: sequelize.HasManyGetAssociationsMixin<I${AssocInstance}>;
+    set${plural}: sequelize.HasManySetAssociationsMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    add${plural}: sequelize.HasManyAddAssociationsMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    add${singular}: sequelize.HasManyAddAssociationMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    create${singular}: sequelize.HasManyCreateAssociationMixin<I${AssocAttributes}, I${AssocInstance}>;
+    remove${singular}: sequelize.HasManyRemoveAssociationMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    remove${plural}: sequelize.HasManyRemoveAssociationsMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    has${singular}: sequelize.HasManyHasAssociationMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    has${plural}: sequelize.HasManyHasAssociationsMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    count${plural}: sequelize.HasManyCountAssociationsMixin;
     `
   );
 };
@@ -95,22 +95,22 @@ const addMixinsHasMany = (associationModelName, singular, plural) => {
 const addMixinsBelongsToMany = (associationModelName, singular, plural, joinTableName) => {
   const AssocInstance = `${associationModelName}Instance`;
   const AssocAttributes = `${associationModelName}Attributes`;
-  const JoinTableAttributes = joinTableName[0] === '\"' || joinTableName[0] === "\'"
+  const JoinTableAttributes = joinTableName[0] === '\'' || joinTableName[0] === '\''
     ? joinTableName
     : `${joinTableName}Attributes`;
 
   return (
     `
-    get${plural}: Sequelize.BelongsToManyGetAssociationsMixin<${AssocInstance}>;
-    set${plural}: Sequelize.BelongsToManySetAssociationsMixin<${AssocInstance}, ${AssocInstance}["id"], ${JoinTableAttributes}>;
-    add${plural}: Sequelize.BelongsToManyAddAssociationsMixin<${AssocInstance}, ${AssocInstance}["id"], ${JoinTableAttributes}>;
-    add${singular}: Sequelize.BelongsToManyAddAssociationMixin<${AssocInstance}, ${AssocInstance}["id"], ${JoinTableAttributes}>;
-    create${singular}: Sequelize.BelongsToManyCreateAssociationMixin<${AssocAttributes}, ${AssocInstance}["id"], ${JoinTableAttributes}>;
-    remove${singular}: Sequelize.BelongsToManyRemoveAssociationMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    remove${plural}: Sequelize.BelongsToManyRemoveAssociationsMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    has${singular}: Sequelize.BelongsToManyHasAssociationMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    has${plural}: Sequelize.BelongsToManyHasAssociationsMixin<${AssocInstance}, ${AssocInstance}["id"]>;
-    count${plural}: Sequelize.BelongsToManyCountAssociationsMixin;
+    get${plural}: sequelize.BelongsToManyGetAssociationsMixin<I${AssocInstance}>;
+    set${plural}: sequelize.BelongsToManySetAssociationsMixin<I${AssocInstance}, I${AssocInstance}['id'], I${JoinTableAttributes}>;
+    add${plural}: sequelize.BelongsToManyAddAssociationsMixin<I${AssocInstance}, I${AssocInstance}['id'], I${JoinTableAttributes}>;
+    add${singular}: sequelize.BelongsToManyAddAssociationMixin<I${AssocInstance}, I${AssocInstance}['id'], I${JoinTableAttributes}>;
+    create${singular}: sequelize.BelongsToManyCreateAssociationMixin<I${AssocAttributes}, I${AssocInstance}['id'], I${JoinTableAttributes}>;
+    remove${singular}: sequelize.BelongsToManyRemoveAssociationMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    remove${plural}: sequelize.BelongsToManyRemoveAssociationsMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    has${singular}: sequelize.BelongsToManyHasAssociationMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    has${plural}: sequelize.BelongsToManyHasAssociationsMixin<I${AssocInstance}, I${AssocInstance}['id']>;
+    count${plural}: sequelize.BelongsToManyCountAssociationsMixin;
     `
   );
 };
@@ -118,22 +118,22 @@ const addMixinsBelongsToMany = (associationModelName, singular, plural, joinTabl
 const generateInterface = ({ baseModelName, associationModelName, singular, plural, type, joinTable }) => {
   let mixinsString = '';
   for (let i = 0; i < associationModelName.length; i++) {
-    if (type[i] === "BelongsTo") {
+    if (type[i] === 'BelongsTo') {
       mixinsString += addMixinsBelongsTo(associationModelName[i], singular[i]);
-    } else if (type[i] === "HasOne") {
+    } else if (type[i] === 'HasOne') {
       mixinsString += addMixinsHasOne(associationModelName[i], singular[i]);
-    } else if (type[i] === "HasMany") {
+    } else if (type[i] === 'HasMany') {
       mixinsString += addMixinsHasMany(associationModelName[i], singular[i], plural[i]);
-    } else if (type[i] === "BelongsToMany") {
+    } else if (type[i] === 'BelongsToMany') {
       mixinsString += addMixinsBelongsToMany(associationModelName[i], singular[i], plural[i], joinTable[i]);
     } else {
-      console.error("incorrect type: ", type[i]);
+      console.error('incorrect type: ', type[i]);
       return;
     }
   }
 
   let interfaceString =
-    `export interface ${baseModelName}Instance extends Sequelize.Instance<${baseModelName}Attributes>, ${baseModelName}Attributes {
+    `export interface I${baseModelName}Instance extends sequelize.Instance<I${baseModelName}Attributes>, I${baseModelName}Attributes {
       ${mixinsString}
   };
     `;
